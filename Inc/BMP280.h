@@ -108,14 +108,47 @@ typedef struct
 	int16_t temperature;
 
 	float altitude;
-}BMP280;
+}BMP280_data;
+
+
+typedef struct
+{
+	I2C_HandleTypeDef handler;
+	uint8_t temperatureResolution;
+	uint8_t pressureOversampling;
+	uint8_t powerMode;
+
+	uint8_t standbyTime;
+	uint8_t iirFilter;
+
+	/* calibration data */
+	uint16_t t1;
+	int16_t t2;
+	int16_t t3;
+
+	uint16_t p1;
+	int16_t p2;
+	int16_t p3;
+	int16_t p4;
+	int16_t p5;
+	int16_t p6;
+	int16_t p7;
+	int16_t p8;
+	int16_t p9;
+}BMP280_configData;
 
 /* Private functions */
 
-static BMP280_result BMP280_read8b(uint8_t);
-static BMP280_result BMP280_read16b(uint8_t);
-static BMP280_result BMP280_write8b(uint8_t);
-static BMP280_result BMP280_write16b(uint8_t);
+static uint8_t BMP280_read8b(uint8_t);
+static uint16_t BMP280_read16b(uint8_t);
+static uint36_t BMP280_read24b(uint8_t);
+static void BMP280_write8b(uint8_t, uint8_t);
 
 BMP280_result BMP280_init(I2C_HandleTypeDef*, uint8_t, uint8_t, uint8_t);
-static BMP280_result BMP280_setConfig();
+static BMP280_result BMP280_setConfig(uint8_t, uint8_t);
+static BMP280_result BMP280_getCalibrationData();
+static BMP280_result BMP280_getRawPressureData();
+static BMP280_result BMP280_getRawTemperatureData();
+BMP280_result BMP280_readTemperature();
+BMP280_result BMP280_readPressure();
+BMP280_result BMP280_readAltitude();
