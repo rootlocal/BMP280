@@ -5,6 +5,8 @@
  *      Author: Tomasz Masłoń
  */
 
+#include "stm32l4xx_hal.h"
+
 /* BMP290 IC2 ADDRESS */
 
 #define BMP280_IC2ADDRESS				0xEC
@@ -73,10 +75,10 @@
 #define BMP280_ID						0xD0
 #define BMP280_SW_RESET					0xE0
 #define BMP280_STATUS					0xF3
-#define BMP280_CTRL_MEASUREMENTS		OxF4
-#define BMP280_CONFIG					OxF5
-#define BMP280_PRESSURE_DATA			OxF7
-#define BMP280_TEMPERATURE_DATA			OxFA
+#define BMP280_CTRL_MEASUREMENTS		0xF4
+#define BMP280_CONFIG					0xF5
+#define BMP280_PRESSURE_DATA			0xF7
+#define BMP280_TEMPERATURE_DATA			0xFA
 
 
 //typedef enum
@@ -90,13 +92,13 @@
 //}BMP280_resolution;
 
 
-typedef enum
-{
-	BMP280_OK,
-	BMP280_Error,
-	BMP280_Disconnected,
-	BMP280_InvalidDevice
-}BMP280_result;
+//typedef enum
+//{
+//	BMP280_OK,
+//	BMP280_Error,
+//	BMP280_Disconnected,
+//	BMP280_InvalidDevice
+//}BMP280_result;
 
 
 typedef struct
@@ -113,7 +115,7 @@ typedef struct
 
 typedef struct
 {
-	I2C_HandleTypeDef handler;
+	I2C_HandleTypeDef *handler;
 	uint8_t temperatureResolution;
 	uint8_t pressureOversampling;
 	uint8_t powerMode;
@@ -141,14 +143,14 @@ typedef struct
 
 static uint8_t BMP280_read8b(uint8_t);
 static uint16_t BMP280_read16b(uint8_t);
-static uint36_t BMP280_read24b(uint8_t);
+static uint32_t BMP280_read24b(uint8_t);
 static void BMP280_write8b(uint8_t, uint8_t);
 
-BMP280_result BMP280_init(I2C_HandleTypeDef*, uint8_t, uint8_t, uint8_t);
-static BMP280_result BMP280_setConfig(uint8_t, uint8_t);
-static BMP280_result BMP280_getCalibrationData();
-static BMP280_result BMP280_getRawPressureData();
-static BMP280_result BMP280_getRawTemperatureData();
-BMP280_result BMP280_readTemperature();
-BMP280_result BMP280_readPressure();
-BMP280_result BMP280_readAltitude();
+void BMP280_init(I2C_HandleTypeDef*, uint8_t, uint8_t, uint8_t);
+static void BMP280_setConfig(uint8_t, uint8_t);
+static void BMP280_getCalibrationData();
+static void BMP280_getRawPressureData();
+static void BMP280_getRawTemperatureData();
+void BMP280_readTemperature();
+void BMP280_readPressure();
+void BMP280_readAltitude();
