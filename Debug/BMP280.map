@@ -15,6 +15,7 @@ Allocating common symbols
 Common symbol       size              file
 
 hi2c1               0x4c              Src/main.o
+BMP280_readings     0x4               Src/BMP280.o
 uwTick              0x4               Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
 BMP280              0x4               Src/BMP280.o
 hrtc                0x24              Src/main.o
@@ -1154,21 +1155,23 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 Src/BMP280.o
  .text.BMP280_read16b
                 0x0000000000000000       0x34 Src/BMP280.o
+ .text.BMP280_write8b
+                0x0000000000000000       0x2c Src/BMP280.o
  .text.BMP280_init
-                0x0000000000000000       0x8c Src/BMP280.o
- .debug_info    0x0000000000000000      0x935 Src/BMP280.o
- .debug_abbrev  0x0000000000000000      0x1c6 Src/BMP280.o
- .debug_loc     0x0000000000000000       0xb1 Src/BMP280.o
+                0x0000000000000000       0xb0 Src/BMP280.o
+ .debug_info    0x0000000000000000      0xa83 Src/BMP280.o
+ .debug_abbrev  0x0000000000000000      0x224 Src/BMP280.o
+ .debug_loc     0x0000000000000000      0x126 Src/BMP280.o
  .debug_aranges
-                0x0000000000000000       0x28 Src/BMP280.o
- .debug_ranges  0x0000000000000000       0x18 Src/BMP280.o
- .debug_line    0x0000000000000000      0x23d Src/BMP280.o
- .debug_str     0x0000000000000000      0x7b3 Src/BMP280.o
+                0x0000000000000000       0x30 Src/BMP280.o
+ .debug_ranges  0x0000000000000000       0x20 Src/BMP280.o
+ .debug_line    0x0000000000000000      0x264 Src/BMP280.o
+ .debug_str     0x0000000000000000      0x83c Src/BMP280.o
  .comment       0x0000000000000000       0x7d Src/BMP280.o
- .debug_frame   0x0000000000000000       0x4c Src/BMP280.o
+ .debug_frame   0x0000000000000000       0x7c Src/BMP280.o
  .ARM.attributes
                 0x0000000000000000       0x39 Src/BMP280.o
- COMMON         0x0000000000000000        0x4 Src/BMP280.o
+ COMMON         0x0000000000000000        0x8 Src/BMP280.o
  .text          0x0000000000000000        0x0 Src/main.o
  .data          0x0000000000000000        0x0 Src/main.o
  .bss           0x0000000000000000        0x0 Src/main.o

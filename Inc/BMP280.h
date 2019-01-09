@@ -103,11 +103,11 @@
 
 typedef struct
 {
-	uint32_t pressureRaw;
-	uint32_t temperatureRaw;
+//	uint32_t pressureRaw;
+//	uint32_t temperatureRaw;
 
-	uint32_t pressure;
-	int16_t temperature;
+	float pressure;
+	float temperature;
 
 	float altitude;
 }BMP280_data;
@@ -122,6 +122,10 @@ typedef struct
 
 	uint8_t standbyTime;
 	uint8_t iirFilter;
+
+	uint8_t t_fine;
+	uint8_t var1;
+	uint8_t var2;
 
 	/* calibration data */
 	uint16_t t1;
@@ -148,9 +152,9 @@ static void BMP280_write8b(uint8_t, uint8_t);
 
 void BMP280_init(I2C_HandleTypeDef*, uint8_t, uint8_t, uint8_t);
 static void BMP280_setConfig(uint8_t, uint8_t);
-static void BMP280_getCalibrationData();
-static void BMP280_getRawPressureData();
-static void BMP280_getRawTemperatureData();
+//static void BMP280_getCalibrationData();
+static void BMP280_getPressureData();
+static void BMP280_getTemperatureData();
 void BMP280_readTemperature();
 void BMP280_readPressure();
 void BMP280_readAltitude();
