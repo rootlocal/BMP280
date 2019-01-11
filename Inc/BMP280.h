@@ -115,7 +115,6 @@ typedef struct
 
 typedef struct
 {
-	I2C_HandleTypeDef *handler;
 	uint8_t temperatureResolution;
 	uint8_t pressureOversampling;
 	uint8_t powerMode;
@@ -123,7 +122,7 @@ typedef struct
 	uint8_t standbyTime;
 	uint8_t iirFilter;
 
-	uint8_t t_fine;
+	int32_t t_fine;
 	uint8_t var1;
 	uint8_t var2;
 
@@ -143,18 +142,23 @@ typedef struct
 	int16_t p9;
 }BMP280_configData;
 
+BMP280_configData *BMP280;
+BMP280_data *BMP280_readings;
+I2C_HandleTypeDef *BMP280_I2C_handler;
+
+
 /* Private functions */
 
-static uint8_t BMP280_read8b(uint8_t);
-static uint16_t BMP280_read16b(uint8_t);
-static uint32_t BMP280_read24b(uint8_t);
-static void BMP280_write8b(uint8_t, uint8_t);
+uint8_t BMP280_read8b(uint8_t);
+uint16_t BMP280_read16b(uint8_t);
+uint32_t BMP280_read24b(uint8_t);
+void BMP280_write8b(uint8_t, uint8_t);
 
 void BMP280_init(I2C_HandleTypeDef*, uint8_t, uint8_t, uint8_t);
 static void BMP280_setConfig(uint8_t, uint8_t);
 //static void BMP280_getCalibrationData();
-static void BMP280_getPressureData();
-static void BMP280_getTemperatureData();
+void BMP280_getPressureData();
+void BMP280_getTemperatureData();
 void BMP280_readTemperature();
 void BMP280_readPressure();
 void BMP280_readAltitude();

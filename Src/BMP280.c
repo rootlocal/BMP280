@@ -7,40 +7,42 @@
 
 #include "BMP280.h"
 
-BMP280_configData *BMP280;
-BMP280_data *BMP280_readings;
 
 
-static uint8_t BMP280_read8b(uint8_t address)
+
+uint8_t BMP280_read8b(uint8_t address)
 {
 	uint8_t tmp;
 
-	HAL_I2C_Mem_Read(BMP280->handler, BMP280_IC2ADDRESS, address, 1, &tmp, 1, 10);
+	HAL_I2C_Mem_Read(BMP280_I2C_handler, BMP280_IC2ADDRESS, address, 1, &tmp, 1, 10);
 
 	return tmp;
 }
 
-static uint16_t BMP280_read16b(uint8_t address)
+uint16_t BMP280_read16b(uint8_t address)
 {
 	uint8_t tmp[2];
 	// tmp without dereferece bc tmp is a table
-	HAL_I2C_Mem_Read(BMP280->handler, BMP280_IC2ADDRESS, address, 1, tmp, 2, 10);
+	HAL_I2C_Mem_Read(BMP280_I2C_handler, BMP280_IC2ADDRESS, address, 1, tmp, 2, 10);
 
 	return (tmp[0]<<8 | tmp[1]); // combines two 8b into one 16b
 }
 
-static uint32_t BMP280_read24b(uint8_t address)
+uint32_t BMP280_read24b(uint8_t address)
 {
 	uint8_t tmp[3];
 	// tmp without dereferece bc tmp is a table
-	HAL_I2C_Mem_Read(BMP280->handler, BMP280_IC2ADDRESS, address, 1, tmp, 3, 10);
+	HAL_I2C_Mem_Read(BMP280_I2C_handler, BMP280_IC2ADDRESS, address, 1, tmp, 3, 10);
 
 	return (tmp[0]<<16 | tmp[1]<<8 | tmp[2]); // combines three 8b into one 24b
 }
 
-static void BMP280_write8b(uint8_t address, uint8_t data)
+void BMP280_write8b(uint8_t address, uint8_t data)
 {
-	HAL_I2C_Mem_Write(BMP280->handler, BMP280_IC2ADDRESS, address, 1, &data, 1, 10);
+	if(HAL_I2C_IsDeviceReady(BMP280_I2C_handler,BMP280_IC2ADDRESS, 10, 100)==HAL_OK)
+	{
+		HAL_I2C_Mem_Write(BMP280_I2C_handler, BMP280_IC2ADDRESS, address, 1, &data, 1, 10);
+	}
 }
 
 static void BMP280_setConfig(uint8_t standbyTime, uint8_t filter)
@@ -52,7 +54,7 @@ static void BMP280_setConfig(uint8_t standbyTime, uint8_t filter)
 
 void BMP280_init(I2C_HandleTypeDef *i2c_hndlr, uint8_t pOversamp, uint8_t tempRes, uint8_t mode)
 {
-	BMP280->handler=i2c_hndlr;
+	BMP280_I2C_handler=i2c_hndlr;
 	BMP280->powerMode=mode;
 	if(BMP280->powerMode == BMP280_MODE_STANDARD)
 	{
@@ -78,12 +80,12 @@ void BMP280_init(I2C_HandleTypeDef *i2c_hndlr, uint8_t pOversamp, uint8_t tempRe
 	BMP280->p9=BMP280_read16b(BMP280_DIG_P8);
 	BMP280->p9=BMP280_read16b(BMP280_DIG_P9);
 
-	BMP280_write8b(BMP280_CTRL_MEASUREMENTS,(((BMP280->temperatureResolution & 0x7)<<5) |
-			((BMP280->pressureOversampling & 0x7)<<2) | mode) & 0x3);
+	BMP280_write8b(BMP280_CTRL_MEASUREMENTS,((BMP280->temperatureResolution & 0x7)<<5) |
+			((BMP280->pressureOversampling & 0x7)<<2) | BMP280->powerMode);
 }
 
 
-static void BMP280_getTemperatureData()
+void BMP280_getTemperatureData()
 {
 	int32_t var1, var2;
 	if(BMP280->powerMode==BMP280_MODE_FORCED)
@@ -119,14 +121,14 @@ static void BMP280_getTemperatureData()
 
 			  BMP280->t_fine = var1 + var2;
 
-			  float T  = (BMP280->t_fine * 5 + 128) >> 8;
+			  float T  = (float)((BMP280->t_fine * 5 + 128) >> 8);
 			  BMP280_readings->temperature=T/100;
 		  }
 	}
 }
 
 
-static void BMP280_getPressureData()
+void BMP280_getPressureData()
 {
 	  int64_t var1, var2, p;
 
