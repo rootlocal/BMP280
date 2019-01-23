@@ -1,7 +1,8 @@
-BMP280.c:13:9:BMP280_read8b	32	static
-BMP280.c:22:10:BMP280_read16b	32	static
-BMP280.c:31:10:BMP280_read24b	32	static
-BMP280.c:40:6:BMP280_write8b	40	static
-BMP280.c:55:6:BMP280_init	24	static
-BMP280.c:88:6:BMP280_getTemperatureData	8	static
-BMP280.c:131:6:BMP280_getPressureData	40	static
+BMP280.c:11:9:BMP280_read8b	40	static
+BMP280.c:21:10:BMP280_read16b	40	static
+BMP280.c:30:10:BMP280_read16b_LE	24	static
+BMP280.c:38:6:BMP280_write8b	32	static
+BMP280.c:46:13:BMP280_setConfig	16	static
+BMP280.c:53:6:BMP280_init	24	static
+BMP280.c:90:6:BMP280_getTemperatureData	32	static
+BMP280.c:130:6:BMP280_getPressureAndTemperatureData	176	static
